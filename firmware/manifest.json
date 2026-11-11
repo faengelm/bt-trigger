@@ -7,8 +7,8 @@
       "env": "esp32",
       "transport": "classic",
       "file": "bt-trigger-esp32.factory.bin",
-      "size": 664928,
-      "sha256": "c5a89d26137033439ae05ff378b58a75792f53481d14af9a32aa83c987e2eb77"
+      "size": 665056,
+      "sha256": "67996ac1907ca7c59fcd49928b70c4f5e5beec3ed717d8add579f19a460e04c1"
     }
   ]
 }
