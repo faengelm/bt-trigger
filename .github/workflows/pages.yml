@@ -1,0 +1,44 @@
+name: Website
+
+# Publishes docs/ (landing page + web flasher) and the firmware in firmware/
+# to GitHub Pages. One-time setup: Settings -> Pages -> Source: "GitHub Actions".
+on:
+  push:
+    branches: [main, std-bluetooth-trigger-HID-ESP32]
+    paths: ["docs/**", "firmware/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+# Read-only by default; only the deploy job gets the Pages permissions.
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: Assemble site
+        run: |
+          mkdir -p _site/firmware
+          cp -r docs/. _site/
+          cp firmware/*.bin firmware/manifest.json _site/firmware/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

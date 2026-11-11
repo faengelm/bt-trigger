@@ -1,0 +1,14 @@
+{
+  "version": "2.1.0",
+  "config_offset": 1572864,
+  "builds": [
+    {
+      "chip": "ESP32",
+      "env": "esp32",
+      "transport": "classic",
+      "file": "bt-trigger-esp32.factory.bin",
+      "size": 663184,
+      "sha256": "05026c423ef531e1cd55e7a6f53ca7de86dae88e1a99465901489d22ca955bde"
+    }
+  ]
+}
