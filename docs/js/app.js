@@ -148,6 +148,29 @@ function setTxPower(dbm, levels = CHIPS[state.chip || "ESP32"].txLevels) {
   sel.value = String(nearest);
 }
 
+/* ------------------------------------------------------------ numbering */
+// Several boards need different names, so new boards get "BT Trigger 1",
+// "BT Trigger 2"… The highest number installed is remembered in this
+// browser only; the name field can still be changed freely.
+const NUMBERED = /^BT Trigger (\d{1,4})$/;
+const LAST_NUMBER_KEY = "btt.lastNumber";
+
+function lastNumber() {
+  try {
+    return Math.max(0, parseInt(localStorage.getItem(LAST_NUMBER_KEY), 10) || 0);
+  } catch {
+    return 0;
+  }
+}
+
+function rememberNumber(name) {
+  const m = NUMBERED.exec(name);
+  if (!m || Number(m[1]) <= lastNumber()) return;
+  try { localStorage.setItem(LAST_NUMBER_KEY, m[1]); } catch { /* storage blocked */ }
+}
+
+const nextName = () => `BT Trigger ${lastNumber() + 1}`;
+
 function applyBoardPreset(id) {
   const b = BOARDS.find((x) => x.id === id);
   if (!b) return;
@@ -221,7 +244,7 @@ function refreshForm() {
   } else if (state.boardSettings && s.name !== state.boardSettings.name) {
     nameHint.textContent = `Renamed from "${state.boardSettings.name}": you'll need to re-pair on the iPhone.`;
   } else {
-    nameHint.textContent = 'Pick something you\'ll recognize, e.g. "Scooter" or "Desk".';
+    nameHint.textContent = 'Give each board its own name, e.g. "BT Trigger 2" or "Desk".';
   }
 
   const needsPin = s.triggerMode !== TRIGGER.always;
@@ -398,6 +421,10 @@ async function connect() {
       writeForm(state.boardSettings);
       $("board-note").textContent = "Settings loaded from your board. Board preset only changes the pins.";
     }
+    // New board, or one still on the old shared default name: suggest the next number.
+    if (!state.boardSettings || state.boardSettings.name === DEFAULTS.name) {
+      $("name").value = nextName();
+    }
 
     renderFwInfo();
 
@@ -483,6 +510,7 @@ async function install(settingsOnly) {
     await disconnect(true);
 
     progress(100, "Installed ✓");
+    rememberNumber(settings.name);
     $("done-name").textContent = settings.name;
     const renamed = !!state.boardSettings && state.boardSettings.name !== settings.name;
     const rn = $("done-rename");
@@ -551,6 +579,7 @@ function init() {
   populateForChip("ESP32");
   $("board").value = "esp32-devkit";
   applyBoardPreset("esp32-devkit");
+  $("name").value = nextName();
 
   $("btn-connect").addEventListener("click", connect);
   $("btn-disconnect").addEventListener("click", () => disconnect());
