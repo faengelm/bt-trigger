@@ -47,7 +47,11 @@ static char                 s_name[BTT_NAME_MAX + 1];
 static uint16_t             s_reconnect_s = 8;
 
 static volatile bool s_registered = false;
-static volatile bool s_enabled    = true;
+/* Starts off: main.c turns the link on once it has read the trigger. Starting
+ * on let the HID registration (which finishes on the Bluetooth task) call the
+ * phone before an inactive pin could switch it off, so pin modes connected
+ * briefly at every power-up and ran the Shortcut by mistake. */
+static volatile bool s_enabled    = false;
 static volatile bool s_pairable   = true;
 static volatile bool s_connected  = false;
 static volatile bool s_connecting = false;
