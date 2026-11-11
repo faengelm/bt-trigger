@@ -121,7 +121,9 @@ rewrites them in a second without touching the pairing.
 ## Quick start
 
 1. **Flash:** open the [web installer](https://faengelm.github.io/bt-trigger/), click **Connect**, choose your settings, click **Install**.
-2. **Pair (once):** iPhone → **Settings → Bluetooth** → tap your device under *Other Devices*. No PIN.
+2. **Pair (once):** iPhone → **Settings → Accessibility → Touch → AssistiveTouch** → turn it on → **Devices → Bluetooth Devices** →
+   tap your device. No PIN. (The iPhone only lists mice there; an iPad lists it in **Settings → Bluetooth**.)
+   You can turn AssistiveTouch off again afterwards.
 3. **Automate:** **Shortcuts → Automation → + → Bluetooth** → choose your device →
    **Is Connected** → **Run Immediately** → add your actions.
 
@@ -168,8 +170,9 @@ the precompiled Arduino libraries. The first build downloads the SDK and is slow
 
 ## Troubleshooting
 
-- **Not in the Bluetooth list:** the device is probably already paired to another
-  phone or the pairing window has closed. Power-cycle it, or hold the reset button 5 s.
+- **Not in the Bluetooth list:** on an iPhone, look in Settings → Accessibility → Touch → AssistiveTouch → Devices →
+  Bluetooth Devices instead (iPhones hide mice from Settings → Bluetooth). Otherwise the
+  device is probably already paired to another phone or the pairing window has closed. Power-cycle it, or hold the reset button 5 s.
 - **Paired but the automation doesn't run:** in Shortcuts, make sure the automation
   is set to **Run Immediately** and the device is selected in the Bluetooth trigger.
 - **After re-flashing it won't connect:** on the iPhone tap the device → *Forget This

@@ -118,7 +118,7 @@
     <h2>How it works</h2>
     <ol class="steps">
       <li><b>Flash</b><span>Plug the board into your computer, choose a name and options below, click Install.</span></li>
-      <li><b>Pair once</b><span>iPhone → Settings → Bluetooth → tap your device. No PIN.</span></li>
+      <li><b>Pair once</b><span>iPhone → turn on AssistiveTouch → Devices → Bluetooth Devices → tap your device. No PIN.</span></li>
       <li><b>Automate</b><span>Shortcuts → Automation → Bluetooth → your device → "Is Connected" → add actions → Run Immediately.</span></li>
     </ol>
     <p class="note">The board appears as a <b>mouse that never moves</b>. iOS treats it like any other Bluetooth accessory,
@@ -316,7 +316,7 @@
     <div id="done" class="alert ok" hidden>
       <b>Done! Your trigger is running.</b>
       <ol>
-        <li>iPhone → <b>Settings → Bluetooth</b> → tap <b id="done-name">ESP32-BT-Trigger</b> under <i>Other Devices</i>.</li>
+        <li>iPhone → <b>Settings → Accessibility → Touch → AssistiveTouch</b> → turn it on → <b>Devices → Bluetooth Devices</b> → tap <b id="done-name">ESP32-BT-Trigger</b>. (iPad: <b>Settings → Bluetooth</b>.)</li>
         <li><b>Shortcuts → Automation → + → Bluetooth</b> → choose it → <b>Is Connected</b> → <b>Run Immediately</b>.</li>
       </ol>
       <p id="done-pin" hidden>Pin trigger: it stays visible until your iPhone is paired. After that it connects <b>only while the pin is active</b>, so test it by closing the switch / pressing the button.</p>
@@ -333,8 +333,8 @@
         <h3>1 · Pair (once)</h3>
         <ol>
           <li>Power the board (LED blinks fast = ready to pair).</li>
-          <li><b>Settings → Bluetooth</b>, tap your device under <i>Other Devices</i>.</li>
-          <li>It moves to <i>My Devices</i>. That's it, no code.</li>
+          <li><b>Settings → Accessibility → Touch → AssistiveTouch</b>: turn it on, then open <b>Devices → Bluetooth Devices</b> and tap your device. The iPhone only lists mice there, not in Settings → Bluetooth (an iPad lists it in Settings → Bluetooth).</li>
+          <li>Once paired you can turn AssistiveTouch off again: the device stays in <i>Settings → Bluetooth → My Devices</i>. No code.</li>
         </ol>
       </div>
       <div class="card">
