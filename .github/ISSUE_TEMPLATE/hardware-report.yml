@@ -48,7 +48,7 @@ body:
     attributes:
       label: What did you check?
       options:
-        - label: Appears in iPhone Settings → Bluetooth → Other Devices
+        - label: Appears in iPhone AssistiveTouch → Devices → Bluetooth Devices
         - label: Pairs without a PIN
         - label: Shortcuts automation runs on connect
         - label: Reconnects by itself after a power cycle

@@ -217,7 +217,7 @@ void app_main(void)
     transport_init(&s_cfg);
     transport_set_enabled(link_wanted(now_ms()));
 
-    ESP_LOGI(TAG, "Ready. On the iPhone: Settings > Bluetooth > '%s'", s_cfg.name);
+    ESP_LOGI(TAG, "Ready. iPhone: Settings > Accessibility > Touch > AssistiveTouch (on) > Devices > Bluetooth Devices > '%s'", s_cfg.name);
 
     uint32_t last_sec = now_ms();
     link_state_t last_state = (link_state_t)-1;
