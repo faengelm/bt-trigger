@@ -192,6 +192,25 @@ the precompiled Arduino libraries. The first build downloads the SDK and is slow
 | `test/host/` | Runs the real firmware settings parser against the web installer's output |
 | `scripts/make_release.py` | Builds every variant and the merged images |
 
+## Changes from the original
+
+This project started as a copy of [esp32-bt-trigger](https://github.com/Mattboxx/esp32-bt-trigger)
+by Mattboxx (not a GitHub fork). Differences so far:
+
+- **Forgetting phones really forgets them.** On the original, an iPad or iPhone that
+  still remembered the board could quietly re-pair and grab it again after a
+  "forget". Now every forget (5 s button hold, or a clean install) gives the board
+  a new Bluetooth address, so devices that paired before no longer recognise it.
+  Normal updates keep the address, so your pairing survives.
+- **iPhone pairing goes through AssistiveTouch.** iPhones don't list the board in
+  Settings → Bluetooth, because it shows up as a mouse. It appears under
+  Settings → Accessibility → Touch → AssistiveTouch → Devices → Bluetooth Devices.
+  iPads list it in Settings → Bluetooth as usual. The installer, this README and the
+  board's log message now say so.
+
+Checked on an ESP32-WROOM-32 DevKit (ESP32-D0WD-V3) with an iPhone 16 Pro on iOS 27.2.1:
+the new address stays the same across restarts, and the board shows up under AssistiveTouch.
+
 ## Credits
 
 Based on [esp32-bt-trigger](https://github.com/Mattboxx/esp32-bt-trigger) by Mattboxx (MIT).
