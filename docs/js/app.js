@@ -488,7 +488,7 @@ async function install(settingsOnly) {
     const rn = $("done-rename");
     rn.hidden = !(renamed || forget);
     rn.innerHTML = forget
-      ? "The board forgot all phones: on the iPhone, open the old entry → <b>Forget This Device</b> → pair again."
+      ? "The board forgot all phones and has a new Bluetooth address, so old iPhones and iPads can't grab it back. On each of them, open the old entry → <b>Forget This Device</b>, then pair the one you want."
       : "You changed the name: on the iPhone, open the old entry → <b>Forget This Device</b> → pair again.";
     $("done-pin").hidden = settings.triggerMode === TRIGGER.always;
     $("done").hidden = false;

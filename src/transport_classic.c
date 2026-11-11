@@ -13,6 +13,9 @@
 #include <string.h>
 
 #include "esp_log.h"
+#include "esp_mac.h"
+#include "esp_random.h"
+#include "bootloader_random.h"
 #include "nvs.h"
 #include "esp_bt.h"
 #include "esp_bt_main.h"
@@ -79,6 +82,53 @@ static void last_save(const esp_bd_addr_t a)
         nvs_commit(h);
         nvs_close(h);
     }
+}
+
+/* ---------- Bluetooth address ----------
+ * iPhones and iPads remember a mouse by its Bluetooth address and quietly
+ * re-pair it (Just Works, no prompt) whenever they find it again. Forgetting
+ * the phones on the board alone is therefore not enough: an iPad that still
+ * has the old entry grabs the board straight back. So every "forget" (5 s
+ * button hold, or a clean install that wipes NVS) also gives the board a new
+ * address, and devices that paired before no longer recognise it.
+ * Must run before the BT controller starts. */
+static void address_apply(void)
+{
+    uint8_t addr[6];
+    size_t  len  = sizeof(addr);
+    bool    have = false;
+    nvs_handle_t h;
+    if (nvs_open("btt", NVS_READONLY, &h) == ESP_OK) {
+        have = nvs_get_blob(h, "addr", addr, &len) == ESP_OK && len == sizeof(addr);
+        nvs_close(h);
+    }
+    if (!have) {
+        esp_read_mac(addr, ESP_MAC_BT);   /* factory address */
+        if (!s_have_last) {
+            /* No phone was ever connected (new board, clean install or
+             * forget): pick a new address, keeping the Espressif prefix.
+             * Boards updated from older firmware with a phone already paired
+             * keep the factory address, so their pairing survives. */
+            bootloader_random_enable();
+            uint32_t lap;
+            do {
+                esp_fill_random(addr + 3, 3);
+                lap = ((uint32_t)addr[3] << 16) | ((uint32_t)addr[4] << 8) | addr[5];
+            } while (lap >= 0x9E8B00 && lap <= 0x9E8B3F);   /* reserved for inquiry */
+            bootloader_random_disable();
+        }
+        if (nvs_open("btt", NVS_READWRITE, &h) == ESP_OK) {
+            nvs_set_blob(h, "addr", addr, sizeof(addr));
+            nvs_commit(h);
+            nvs_close(h);
+        }
+    }
+    if (esp_iface_mac_addr_set(addr, ESP_MAC_BT) != ESP_OK) {
+        ESP_LOGW(TAG, "Could not set the Bluetooth address, using the factory one");
+        return;
+    }
+    ESP_LOGI(TAG, "Bluetooth address %02x:%02x:%02x:%02x:%02x:%02x",
+             addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
 }
 
 static int bond_list(esp_bd_addr_t *list)
@@ -248,8 +298,9 @@ void transport_init(const btt_config_t *cfg)
     strncpy(s_name, cfg->name, sizeof(s_name) - 1);
     s_reconnect_s = cfg->reconnect_s;
     last_load();
+    address_apply();
 
-    s_app.name          = s_name;
+    s_app.name         = s_name;
     s_app.description   = "BT Trigger";
     s_app.provider      = "BT Trigger";
     s_app.subclass      = ESP_HID_CLASS_MIC;            /* pointing device */
@@ -367,6 +418,7 @@ void transport_forget_all(void)
     nvs_handle_t h;
     if (nvs_open("btt", NVS_READWRITE, &h) == ESP_OK) {
         nvs_erase_key(h, "last");
+        nvs_erase_key(h, "addr");   /* new Bluetooth address on the next boot */
         nvs_commit(h);
         nvs_close(h);
     }
