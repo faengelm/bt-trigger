@@ -79,13 +79,12 @@ function buildFor(chip) {
   return state.manifest?.builds.find((b) => b.chip === chip) || null;
 }
 
-/* ------------------------------------------------------------ trigger mode */
-function setMode(mode, fromBoard = false) {
-  const r = document.querySelector(`input[name="trigger"][value="${mode}"]`);
-  if (r) r.checked = true;
-  // Picking a pin mode with no pin yet: suggest GPIO4 (free on every supported chip).
-  if (mode !== TRIGGER.always && !fromBoard && $("trigger-gpio").value === "-1") setPin($("trigger-gpio"), 4);
-  refreshForm();
+/* ------------------------------------------------------------ contact pin */
+// The installer only sets up contact mode: connected while the contact on
+// the input pin is closed. D4 (GPIO4) is the documented pin.
+const CONTACT_GPIO = 4;
+function ensureContactPin() {
+  if ($("trigger-gpio").value === "-1") setPin($("trigger-gpio"), CONTACT_GPIO);
 }
 
 async function fetchFirmware(build) {
@@ -183,7 +182,6 @@ function applyBoardPreset(id) {
 }
 
 function readForm() {
-  const trig = Number(document.querySelector('input[name="trigger"]:checked').value);
   return {
     name: $("name").value.trim() || DEFAULTS.name,
     reconnectS: Number($("reconnect").value) || DEFAULTS.reconnectS,
@@ -194,7 +192,7 @@ function readForm() {
     ledActiveLow: $("led-pol").value === "1",
     ledBrightness: DEFAULTS.ledBrightness,
     buttonGpio: Number($("button-gpio").value),
-    triggerMode: trig,
+    triggerMode: TRIGGER.switch,
     triggerGpio: Number($("trigger-gpio").value),
     triggerActiveHigh: $("trigger-pol").value === "1",
     triggerPull: Number($("trigger-pull").value),
@@ -217,8 +215,6 @@ function writeForm(s) {
   setPin($("led-gpio"), s.ledGpio);
   $("led-pol").value = s.ledActiveLow ? "1" : "0";
   setPin($("button-gpio"), s.buttonGpio);
-  const r = document.querySelector(`input[name="trigger"][value="${s.triggerMode}"]`);
-  if (r) r.checked = true;
   setPin($("trigger-gpio"), s.triggerGpio);
   $("trigger-pol").value = s.triggerActiveHigh ? "1" : "0";
   // PULL.auto (older settings) shown as the resistor it resolves to.
@@ -228,7 +224,8 @@ function writeForm(s) {
   $("debounce").value = s.debounceMs || DEFAULTS.debounceMs;
   $("hold").value = s.holdS || 0;
   setTxPower(s.txPowerDbm);
-  setMode(s.triggerMode, true);
+  ensureContactPin();
+  refreshForm();
 }
 
 /** Validate and update dependent fields. Returns an error string or "". */
@@ -421,6 +418,7 @@ async function connect() {
       writeForm(state.boardSettings);
       $("board-note").textContent = "Settings loaded from your board. Board preset only changes the pins.";
     }
+    ensureContactPin();   // the pin lists were just refilled
     // New board, or one still on the old shared default name: suggest the next number.
     if (!state.boardSettings || state.boardSettings.name === DEFAULTS.name) {
       $("name").value = nextName();
@@ -594,8 +592,6 @@ function init() {
     }
     refreshForm();
   });
-  document.querySelectorAll('input[name="trigger"]').forEach((r) =>
-    r.addEventListener("change", (e) => setMode(Number(e.target.value))));
   $("settings").addEventListener("submit", (e) => e.preventDefault());
   $("settings").addEventListener("input", refreshForm);
   $("settings").addEventListener("change", refreshForm);
@@ -604,15 +600,12 @@ function init() {
       ? "The board will forget every iPhone. On each iPhone: tap the device → Forget This Device → pair again."
       : "Leave it off to keep your iPhone paired across updates.";
   });
-  // Contact mode is the default. Deep links: ?mode=power|switch|button.
-  const q = new URLSearchParams(location.search);
-  const mode = { power: TRIGGER.always, switch: TRIGGER.switch, button: TRIGGER.pulse }[q.get("mode")] ??
-    TRIGGER.switch;
-  setMode(mode);
+  ensureContactPin();
+  refreshForm();
   loadManifest().then(() => updateButtons());
 }
 
 init();
 
 // Exposed for automated tests only.
-window.__bttTest = { readForm, writeForm, refreshForm, populateForChip, applyBoardPreset, setMode, buildFor, state };
+window.__bttTest = { readForm, writeForm, refreshForm, populateForChip, applyBoardPreset, ensureContactPin, buildFor, state };
