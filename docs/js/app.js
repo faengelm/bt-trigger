@@ -604,10 +604,10 @@ function init() {
       ? "The board will forget every iPhone. On each iPhone: tap the device → Forget This Device → pair again."
       : "Leave it off to keep your iPhone paired across updates.";
   });
-  // Deep links for campaigns: ?mode=power|switch|button (old ?edition=pin = switch).
+  // Contact mode is the default. Deep links: ?mode=power|switch|button.
   const q = new URLSearchParams(location.search);
   const mode = { power: TRIGGER.always, switch: TRIGGER.switch, button: TRIGGER.pulse }[q.get("mode")] ??
-    (q.get("edition") === "pin" ? TRIGGER.switch : TRIGGER.always);
+    TRIGGER.switch;
   setMode(mode);
   loadManifest().then(() => updateButtons());
 }

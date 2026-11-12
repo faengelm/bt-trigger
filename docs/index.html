@@ -7,14 +7,14 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>BT Trigger</title>
-  <meta name="description" content="Turn a $3 ESP32 into a Bluetooth trigger for iPhone Shortcuts. When it powers on, your automation runs. Configure and flash it from your browser in 2 minutes. No app, no cloud, no Wi-Fi.">
-  <meta property="og:title" content="BT Trigger – a Bluetooth trigger for iPhone Shortcuts">
-  <meta property="og:description" content="When it powers on, your iPhone runs a Shortcut. Flash it from the browser in 2 minutes. Open source, no app, no cloud.">
+  <meta name="description" content="A dry-contact sensor for iPhone Shortcuts. When a switch, relay or pressure pad closes, an ESP32 connects to your iPhone over Bluetooth and a Shortcut runs. Set it up from your browser.">
+  <meta property="og:title" content="BT Trigger – a dry-contact sensor for iPhone Shortcuts">
+  <meta property="og:description" content="When a two-wire contact closes, your iPhone runs a Shortcut. No hub, no Wi-Fi, no app.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://faengelm.github.io/bt-trigger/img/og-v2.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Power on, a $3 ESP32 connects over Bluetooth, and the iPhone runs a Shortcut: scooter on opens Maps, lamp on starts Focus, door opens sends an alert.">
+  <meta property="og:image:alt" content="An ESP32 board connects to an iPhone over Bluetooth and a Shortcut runs.">
   <meta property="og:url" content="https://faengelm.github.io/bt-trigger/">
   <meta name="twitter:image" content="https://faengelm.github.io/bt-trigger/img/og-v2.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -30,7 +30,8 @@
       <a href="#how">How it works</a>
       <a href="#install">Install</a>
       <a href="#iphone">iPhone setup</a>
-      <a href="#faq">FAQ</a>
+      <a href="#contact">Wiring</a>
+      <a href="#faq">Questions</a>
       <a class="gh" href="https://github.com/faengelm/bt-trigger">GitHub</a>
     </nav>
   </div>
@@ -40,21 +41,20 @@
   <!-- ================= HERO ================= -->
   <section class="hero wrap">
     <div class="hero-text">
-      <p class="eyebrow">Open-source firmware · ESP32 · iPhone Shortcuts</p>
-      <h1>When it turns on,<br>your iPhone <span class="accent">does something.</span></h1>
-      <p class="lead">A $3 ESP32 board becomes a Bluetooth device your iPhone recognizes.
-        Power it up and the <b>Shortcuts</b> app runs an automation <b>on the phone itself</b> —
-        open Maps, flip a Focus, message someone, call Home Assistant.
-        It works even with no Wi-Fi where the board is: the phone in your pocket is the link.</p>
+      <p class="eyebrow">Dry-contact sensor · ESP32 · iPhone Shortcuts</p>
+      <h1>When a contact closes,<br>your iPhone <span class="accent">runs a Shortcut.</span></h1>
+      <p class="lead">Connect a switch, relay, reed switch or pressure pad to a small ESP32 board.
+        When the contact closes, the board connects to your iPhone over Bluetooth and
+        the <b>Shortcuts</b> app runs your automation.</p>
       <div class="cta">
-        <a class="btn primary" href="#install">Install it from your browser</a>
+        <a class="btn primary" href="#install">Set it up</a>
         <a class="btn ghost" href="https://github.com/faengelm/bt-trigger">Source code</a>
       </div>
       <ul class="pills">
-        <li>2-minute setup</li><li>No code to write</li><li>Reconnects by itself</li><li>MIT licensed</li>
+        <li>No home hub</li><li>No Wi-Fi</li><li>No app to install</li><li>Open source</li>
       </ul>
     </div>
-    <figure class="hero-art" aria-label="Power on, ESP32 connects over Bluetooth, iPhone runs a Shortcut">
+    <figure class="hero-art" aria-label="A contact closes, the ESP32 connects over Bluetooth, the iPhone runs a Shortcut">
       <svg viewBox="0 0 420 300" role="img">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -63,8 +63,10 @@
         </defs>
         <g class="art-power">
           <rect x="18" y="112" width="86" height="76" rx="14"/>
-          <path d="M61 128 l-12 26 h12 l-6 22 l20 -30 h-12 l8 -18z" class="bolt"/>
-          <text x="61" y="206" text-anchor="middle">power on</text>
+          <circle cx="40" cy="160" r="5" fill="#f5a623"/>
+          <circle cx="82" cy="160" r="5" fill="#f5a623"/>
+          <path d="M40 160 L80 140" stroke="#f5a623" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <text x="61" y="206" text-anchor="middle">contact closes</text>
         </g>
         <path d="M110 150 H150" class="flow" marker-end="url(#arr)"/>
         <g class="art-esp">
@@ -88,63 +90,34 @@
     </figure>
   </section>
 
-  <!-- ================= USE CASES ================= -->
-  <section class="wrap uses" aria-labelledby="uses-h">
-    <h2 id="uses-h">The "when this turns on, do that" building block</h2>
-    <div class="grid3">
-      <article><h3>🛴 Scooter, bike, car</h3><p>Ignition on → your iPhone opens Maps, starts a ride timer, sets the volume. <b>No Wi-Fi out there</b> — the phone does it over Bluetooth.</p></article>
-      <article><h3>🖥️ Desk &amp; workshop</h3><p>Desk lamp or monitor on → Work Focus on, playlist starts. 3D printer powered → a timer and a log entry on your phone.</p></article>
-      <article><h3>🚪 Doors &amp; sensors</h3><p><i>Pin mode:</i> a reed switch or relay closes → your iPhone gets a notification, runs a scene, or pings Home Assistant.</p></article>
-      <article><h3>🔘 A real button</h3><p><i>Button mode:</i> press it → the phone connects for a few seconds → any Shortcut runs. A physical button for your phone.</p></article>
-      <article><h3>🏠 Home Assistant, from anywhere</h3><p>The Shortcut forwards the event to HA (webhook or app) over your phone's mobile data — so even a scooter far from home reaches HA.</p></article>
-      <article><h3>🌙 Bedside</h3><p>Night lamp on → Sleep Focus, alarm set, lights dimmed. Lamp off → back to normal.</p></article>
-    </div>
-  </section>
-
-  <!-- ================= WHY ================= -->
+  <!-- ================= COMPARE ================= -->
   <section class="wrap why" aria-labelledby="why-h">
-    <h2 id="why-h">"Can't an ESP32 with Wi-Fi and Home Assistant already do this?"</h2>
-    <p class="note">For flipping switches and logging data at home, yes. This solves the two things that setup <b>can't</b>:</p>
-    <div class="grid3">
-      <article><h3>📱 It acts on your phone</h3><p>Wi-Fi + HA can control your house, but it can't open Maps, turn on a Focus, start a timer or run a Shortcut <b>on your iPhone</b>. This triggers the phone directly — that's the whole point.</p></article>
-      <article><h3>📶 It works with no network</h3><p>On a scooter, bike or car there's no home Wi-Fi and no SIM. A Wi-Fi ESP32 goes offline the moment you leave. This one talks to the phone in your pocket over Bluetooth, and <b>the phone</b> is the gateway to the internet and HA.</p></article>
-      <article><h3>🪶 Nothing to run or install</h3><p>No Home Assistant server, no companion app, no account, no cloud. Just a $3 board and the Shortcuts app that's already on every iPhone.</p></article>
+    <h2 id="why-h">Like a dry-contact sensor, but for Shortcuts</h2>
+    <div class="grid2">
+      <article class="card"><h3>🏠 A dry-contact sensor for Apple Home</h3><p>Reports the contact as open or closed to a home hub. You react to it with a Home automation.</p></article>
+      <article class="card"><h3>📱 BT Trigger</h3><p>Talks straight to your iPhone over Bluetooth. You react to it with a <b>Shortcuts</b> automation, so it can do anything a Shortcut can: send a message, play a sound, start a timer, run a Home scene, call a web service.</p></article>
     </div>
-    <p class="note">In short: a Wi-Fi ESP32 sends data <i>to a server</i>. This sends an event <i>to the phone you carry</i>, wherever you are. The two can work together — the Shortcut can still call Home Assistant.</p>
   </section>
 
   <!-- ================= HOW ================= -->
   <section id="how" class="wrap how">
     <h2>How it works</h2>
     <ol class="steps">
-      <li><b>Flash</b><span>Plug the board into your computer, choose a name and options below, click Install.</span></li>
-      <li><b>Pair once</b><span>iPhone → turn on AssistiveTouch → Devices → Bluetooth Devices → tap your device. No PIN.</span></li>
-      <li><b>Automate</b><span>Shortcuts → Automation → Bluetooth → your device → "Is Connected" → add actions → Run Immediately.</span></li>
+      <li><b>The contact closes</b><span>A switch, relay, reed switch or pressure pad connects D4 to GND.</span></li>
+      <li><b>The board connects</b><span>It connects to your iPhone over Bluetooth, within a few seconds.</span></li>
+      <li><b>Your Shortcut runs</b><span>From an automation that says "When BT Trigger 1 connects".</span></li>
     </ol>
-    <p class="note">The board appears as a <b>mouse that never moves</b>. iOS treats it like any other Bluetooth accessory,
-      and your on-screen keyboard keeps working (a "keyboard" device would hide it).
-      <b>Connecting</b> is the signal; nothing is ever typed or clicked.</p>
-
-    <h3 class="ed-title">Two ways to trigger it</h3>
-    <div class="grid2 ed-cards">
-      <div class="card">
-        <h3>⚡ When it gets power</h3>
-        <p>Wire nothing: power the board from the thing you want to detect (a scooter's USB port, a car socket, a lamp's USB charger). Power on = connected.</p>
-      </div>
-      <div class="card">
-        <h3>📍 When a pin is activated</h3>
-        <p>The board stays powered and connects when <b>a pin you choose</b> changes: a reed switch on a door, a relay, a push button, a sensor output. You set the pin, level, resistor, debounce and timing.</p>
-      </div>
-    </div>
+    <p class="note">When the contact opens, the board disconnects, and a second automation ("Is Disconnected") can react to that too.
+      To the iPhone the board is a Bluetooth mouse that never moves: connecting is the signal, and it never types or clicks anything.</p>
   </section>
 
   <!-- ================= INSTALLER ================= -->
   <section id="install" class="wrap installer">
     <h2>Install from your browser</h2>
-    <p class="sub">Uses Web Serial in <b>Chrome, Edge or Opera on a computer</b> (Windows, macOS, Linux, ChromeOS). Nothing to install.</p>
+    <p class="sub">Open this page in <b>Chrome or Edge on a computer</b> and plug the board in. Nothing else to install.</p>
     <div class="alert warn compat">
-      <b>You need an original ESP32</b> (ESP32-WROOM-32 DevKit, D1 mini32, NodeMCU-32S… about $3–5).
-      <b>ESP32-S3, C3 and C6 won't work</b>: they only have Bluetooth LE, and iOS Shortcuts doesn't list those accessories as triggers.
+      <b>Use an original ESP32 board</b>, such as an "ESP32 DevKit" or "ESP32-WROOM-32" (about $3–5).
+      <b>ESP32-S3, C3 and C6 won't work</b>: their Bluetooth can't be used as a Shortcuts trigger.
     </div>
 
     <div id="browser-warning" class="alert warn" hidden>
@@ -193,12 +166,12 @@
           <fieldset class="field" id="trigger-fieldset">
             <legend>When should it trigger?</legend>
             <div class="choices">
-              <label class="choice"><input type="radio" name="trigger" value="0" checked>
-                <span><b>⚡ When it gets power</b><small>Power it from what you want to detect: car, scooter, lamp, USB charger. No wiring.</small></span></label>
-              <label class="choice"><input type="radio" name="trigger" value="1">
-                <span><b>📍 While a pin is active</b><small>Reed switch, relay, sensor. Connected while the pin is active, disconnects when it isn't.</small></span></label>
+              <label class="choice"><input type="radio" name="trigger" value="1" checked>
+                <span><b>🔌 While a contact is closed</b><small>Switch, relay, reed switch or pressure pad on D4 and GND. Connected while it's closed.</small></span></label>
               <label class="choice"><input type="radio" name="trigger" value="2">
-                <span><b>🔘 When a pin is pressed</b><small>Push button. Each press connects for a few seconds, then disconnects.</small></span></label>
+                <span><b>🔘 When a button is pressed</b><small>Each press connects for a few seconds, then disconnects.</small></span></label>
+              <label class="choice"><input type="radio" name="trigger" value="0">
+                <span><b>⚡ When it gets power</b><small>No wiring: power the board from the thing you want to detect.</small></span></label>
             </div>
           </fieldset>
 
@@ -262,7 +235,7 @@
                 <select id="led-pol"><option value="0">HIGH</option><option value="1">LOW</option></select>
               </div>
             </div>
-            <small class="hint">Fast blink (blue) = ready to pair · slow blink (amber) = looking for your iPhone · solid (green) = connected. Colors on RGB LEDs only.</small>
+            <small class="hint">Off = waiting · fast blink = ready to pair · short flash = looking for your iPhone · steady = connected.</small>
 
             <div class="field-row">
               <div class="field">
@@ -314,12 +287,12 @@
       </li>
     </ol>
     <div id="done" class="alert ok" hidden>
-      <b>Done! Your trigger is running.</b>
+      <b>Done! The board is ready.</b>
       <ol>
-        <li>iPhone → <b>Settings → Accessibility → Touch → AssistiveTouch</b> → turn it on → <b>Devices → Bluetooth Devices</b> → tap <b id="done-name">ESP32-BT-Trigger</b>. (iPad: <b>Settings → Bluetooth</b>.)</li>
-        <li><b>Shortcuts → Automation → + → Bluetooth</b> → choose it → <b>Is Connected</b> → <b>Run Immediately</b>.</li>
+        <li>Pair it: iPhone → <b>Settings → Accessibility → Touch → AssistiveTouch</b> → turn it on → <b>Devices → Bluetooth Devices</b> → tap <b id="done-name">BT Trigger 1</b>. (iPad: <b>Settings → Bluetooth</b>.)</li>
+        <li>Automate it: <b>Shortcuts → Automation → + → Bluetooth</b> → choose it → <b>Is Connected</b> → <b>Run Immediately</b>.</li>
       </ol>
-      <p id="done-pin" hidden>Pin trigger: it stays visible until your iPhone is paired. After that it connects <b>only while the pin is active</b>, so test it by closing the switch / pressing the button.</p>
+      <p id="done-pin" hidden>Until a phone is paired, the board stays visible so you can pair it. After that it connects <b>only while the contact is closed</b>: close it to test.</p>
       <p id="done-rename" hidden></p>
       <button id="btn-monitor" class="btn ghost small">Show live device log</button>
     </div>
@@ -330,31 +303,57 @@
     <h2>iPhone setup</h2>
     <div class="grid2">
       <div class="card">
-        <h3>1 · Pair (once)</h3>
+        <h3>1 · Pair it once</h3>
         <ol>
-          <li>Power the board (LED blinks fast = ready to pair).</li>
-          <li><b>Settings → Accessibility → Touch → AssistiveTouch</b>: turn it on, then open <b>Devices → Bluetooth Devices</b> and tap your device. The iPhone only lists mice there, not in Settings → Bluetooth (an iPad lists it in Settings → Bluetooth).</li>
-          <li>Once paired you can turn AssistiveTouch off again: the device stays in <i>Settings → Bluetooth → My Devices</i>. No code.</li>
+          <li>Power the board. Its light blinks fast while it waits to pair.</li>
+          <li>On the iPhone, open <b>Settings → Accessibility → Touch → AssistiveTouch</b> and turn it on.</li>
+          <li>Open <b>Devices → Bluetooth Devices</b> and tap your board's name. There's no code to enter.</li>
         </ol>
+        <p class="note">iPhones only list Bluetooth mice under AssistiveTouch, not in Settings → Bluetooth. On an iPad, use Settings → Bluetooth.</p>
       </div>
       <div class="card">
-        <h3>2 · Create the automation</h3>
+        <h3>2 · Make the automation</h3>
         <ol>
-          <li><b>Shortcuts</b> → <b>Automation</b> → <b>+</b> (New Automation).</li>
-          <li><b>Bluetooth</b> → <b>Device</b>: choose yours → <b>Is Connected</b> (or <i>Is Disconnected</i>).</li>
-          <li>Pick <b>Run Immediately</b>, turn off <i>Notify When Run</i>, then add your actions.</li>
+          <li>Open <b>Shortcuts → Automation → +</b>.</li>
+          <li>Choose <b>Bluetooth</b>, pick your board, and choose <b>Is Connected</b>.</li>
+          <li>Choose <b>Run Immediately</b>, then add the actions you want.</li>
         </ol>
+        <p class="note">Want something to happen when the contact opens too? Make a second automation with <b>Is Disconnected</b>.</p>
       </div>
     </div>
-    <p class="note">From now on, every time the board powers up (or the switch/button fires) and connects, the automation runs.
-      An AssistiveTouch pointer may appear on screen while it is connected, since iOS thinks a mouse is attached.
+    <p class="note">While the board is connected, iOS may show an AssistiveTouch pointer, because it thinks a mouse is attached.
       You can hide it in <i>Settings → Accessibility → Touch → AssistiveTouch → Pointer Devices</i>.</p>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section id="contact" class="wrap iphone">
+    <h2>Connecting a contact</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Wiring</h3>
+        <ol>
+          <li>Connect the contact's two wires to <b>D4</b> and <b>GND</b>. Either wire can go to either pin.</li>
+          <li>That's all: the board's internal resistor holds D4 up until the contact closes.</li>
+        </ol>
+        <p class="note"><b>Passive contacts only:</b> a switch, relay, reed switch, button or pressure pad with nothing driving it.
+          Don't connect anything that supplies a voltage. The pins take 3.3 V at most.</p>
+      </div>
+      <div class="card">
+        <h3>What the light means</h3>
+        <ul>
+          <li><b>Off</b>: normal. The contact is open and the board is waiting.</li>
+          <li><b>Fast blinking</b>: no iPhone paired yet, ready to pair.</li>
+          <li><b>A short flash every 1.5 s</b>: the contact is closed and the board is looking for the iPhone.</li>
+          <li><b>Steady on</b>: connected. Your automation has run.</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
   <!-- ================= DOWNLOADS ================= -->
   <section id="downloads" class="wrap downloads">
     <h2>Download the firmware</h2>
-    <p>Prefer the command line? Each file is a merged image: write it at offset <code>0x0</code>. Without the web flasher the defaults are used: name <code>ESP32-BT-Trigger</code>, connects whenever powered. To use a pin trigger, connect the board to this page later and click <b>Save settings only</b>.</p>
+    <p>Prefer the command line? Write the file at offset <code>0x0</code>. Flashed this way, the board starts with the name <code>ESP32-BT-Trigger</code> and connects whenever it has power. To use it with a contact, connect it to this page afterwards, choose your settings and click <b>Save settings only</b>.</p>
     <div class="table-wrap">
       <table id="dl-table">
         <thead><tr><th>Chip</th><th>Bluetooth</th><th>File</th><th>Size</th></tr></thead>
@@ -367,25 +366,24 @@ esptool.py --port &lt;PORT&gt; write_flash 0x0 bt-trigger-esp32.factory.bin</cod
 
   <!-- ================= FAQ ================= -->
   <section id="faq" class="wrap faq">
-    <h2>FAQ</h2>
-    <details><summary>Power-on or pin trigger: which one do I need?</summary>
-      <p><b>Power-on</b> if the thing you want to detect can power the board (USB port, 12 V socket with a USB adapter, a lamp's charger). <b>Pin</b> if the board is always powered and you want to react to a contact: door reed switch, relay, button, the output of another device. It's one firmware: you can switch later with <b>Save settings only</b>, in a second.</p>
-      <p>With a pin trigger the board stays visible until a phone is paired, so you can pair it before wiring anything. After that it only connects when the pin is active.</p></details>
+    <h2>Questions</h2>
+    <details><summary>What can I connect?</summary>
+      <p>Anything that closes two wires together without supplying power of its own: a switch, a relay contact, a reed switch on a door, a push button, or a chair or bed pressure pad. Connect it between <b>D4</b> and <b>GND</b>.</p></details>
     <details><summary>Which boards work?</summary>
-      <p><b>Only the original ESP32</b> (ESP32-WROOM-32 / WROVER / PICO modules: DevKit, DOIT DevKit V1, NodeMCU-32S, D1 mini32, M5 Atom, ESP32-CAM, TTGO…), including single-core and 26 MHz-crystal variants, with 2 MB of flash or more. It uses <b>Classic Bluetooth HID</b>.</p>
-      <p><b>ESP32-S3, C3, C6, C5, H2 do not work.</b> They only have Bluetooth LE, and iOS Shortcuts does not list Bluetooth LE (GATT) accessories as automation triggers: they pair, but never show up in the automation's device list. We tested it. <b>ESP32-S2 and ESP8266</b> have no Bluetooth at all.</p></details>
-    <details><summary>Why a mouse and not a keyboard or a "beacon"?</summary>
-      <p>The Shortcuts "Bluetooth" automation only lists accessories paired in Settings, and iOS only pairs certain device types from there: audio, keyboards, mice, game controllers. A plain BLE beacon never shows up, and Bluetooth LE accessories that do pair are still missing from the automation's device list: it has to be <b>Classic Bluetooth</b>. A keyboard would hide your on-screen keyboard while connected. A mouse has no side effects except an optional on-screen pointer.</p></details>
-    <details><summary>Does it work with several iPhones?</summary>
-      <p>Yes. Several phones can pair. The board calls back the last one that was connected first, then the others. Only one is connected at a time.</p></details>
-    <details><summary>Is it private / secure?</summary>
-      <p>Nothing leaves your phone: no account, no internet, no app. The firmware sends no input at all. Use the <i>pairing window</i> option if you don't want strangers to see or pair the device.</p></details>
-    <details><summary>How do I re-pair or reset it?</summary>
-      <p>Hold the configured button for 5 seconds (LED flashes red/fast), or reinstall with "Forget paired phones" ticked. Then on the iPhone, tap the device → <i>Forget This Device</i> and pair again.</p></details>
-    <details><summary>Can I change the settings later?</summary>
-      <p>Yes. Connect the board here again: your current settings are read back from it, and <b>Save settings only</b> rewrites just the 4 KB settings block in a second, keeping your pairing.</p></details>
-    <details><summary>Power consumption?</summary>
-      <p>Roughly 30–60 mA while connected depending on the board, so it's meant for things that are powered anyway (vehicles, USB ports, chargers). It's not a coin-cell device.</p></details>
+      <p>An <b>original ESP32</b>: boards sold as "ESP32 DevKit", "DOIT DevKit V1", "NodeMCU-32S" or "ESP32-WROOM-32", with 2 MB of flash or more.</p>
+      <p><b>ESP32-S3, C3, C6, C5 and H2 don't work.</b> They only have Bluetooth LE, and Shortcuts doesn't offer those accessories as automation triggers. <b>ESP32-S2 and ESP8266</b> have no Bluetooth.</p></details>
+    <details><summary>Can I use several boards?</summary>
+      <p>Yes. Give each one its own name: this page suggests <b>BT Trigger 1</b>, <b>BT Trigger 2</b> and so on, counting in the browser you use. Each name gets its own automation, so each contact can run a different Shortcut.</p></details>
+    <details><summary>Can several iPhones use one board?</summary>
+      <p>Several iPhones can pair with it, but only one is connected at a time. The board calls the one it last connected to first.</p></details>
+    <details><summary>How do I change the settings?</summary>
+      <p>Plug the board in and connect it here again. Its current settings are read back. Change what you need and click <b>Save settings only</b>: the iPhone stays paired.</p></details>
+    <details><summary>How do I reset it?</summary>
+      <p>Hold the board's <b>BOOT</b> button for 5 seconds, or install again with "Forget paired phones" ticked. The board also gets a new Bluetooth address, so iPhones and iPads that paired before can't reconnect. Remove the old entry on the iPhone, then pair again.</p></details>
+    <details><summary>Does it need the internet?</summary>
+      <p>No. The board only talks to the iPhone over Bluetooth. There's no account, no app and no cloud. Whether your Shortcut uses the internet is up to you.</p></details>
+    <details><summary>How much power does it use?</summary>
+      <p>About 30–60 mA, so run it from a USB power supply rather than a battery.</p></details>
   </section>
 </main>
 
