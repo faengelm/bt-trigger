@@ -44,12 +44,14 @@ is the signal: it never types, clicks or moves anything.
 
 1. **Install.** Plug the board into your computer, open the
    [installer page](https://faengelm.github.io/bt-trigger/) and click **Connect**.
-   Leave **While a contact is closed** selected and the input pin on **4**, check
-   the name (for example "BT Trigger 1"), then click **Install**.
-2. **Pair.** Power the board. On the iPhone, go to **Settings → Accessibility →
-   Touch → AssistiveTouch**, turn it on, then open **Devices → Bluetooth Devices**
-   and tap your board's name. (iPhones only list Bluetooth mice there. On an iPad,
-   use **Settings → Bluetooth**.)
+   Leave the input pin on **4**, check the name (for example "BT Trigger 1"), then
+   click **Install**.
+2. **Pair.** Power the board.
+   - **iPhone:** go to **Settings → Accessibility → Touch → AssistiveTouch**, turn it
+     on, then open **Devices → Bluetooth Devices** and tap your board's name.
+     iPhones only list Bluetooth mice there.
+   - **iPad:** skip AssistiveTouch. Open **Settings → Bluetooth** and tap your
+     board's name.
 3. **Automate.** In **Shortcuts → Automation → +**, choose **Bluetooth**, pick your
    board, choose **Is Connected**, then **Run Immediately**, and add your actions.
 4. **Connect the contact** (below), close it, and your Shortcut runs.
@@ -95,15 +97,6 @@ Give each board its own name. The installer suggests **BT Trigger 1**, then
 **BT Trigger 2**, and so on, counting in the browser you use for setup. Each name
 gets its own automation in Shortcuts, so each contact can run a different Shortcut.
 
-## Other ways to trigger it
-
-The same firmware has two more modes, chosen in the installer:
-
-- **When it gets power**: no contact at all. Power the board from the thing you want
-  to detect, such as a car's USB socket or a lamp's charger.
-- **When a button is pressed**: each press connects the board for a few seconds,
-  then it disconnects. Good for a push button that should run a Shortcut once.
-
 ## Changing settings later
 
 Plug the board into the computer and open the installer again. It reads the
@@ -117,7 +110,8 @@ again.
 ## Troubleshooting
 
 - **The board doesn't appear on the iPhone:** look under AssistiveTouch →
-  Devices → Bluetooth Devices, not Settings → Bluetooth. Turn Bluetooth off on other
+  Devices → Bluetooth Devices, not Settings → Bluetooth. (An iPad lists it in
+  Settings → Bluetooth.) Turn Bluetooth off on other
   iPhones or iPads that were paired with it before.
 - **Closing the contact does nothing:** check the wires are on D4 and GND, and that
   the installer shows input pin 4. Watch the light: it should start flashing when the
@@ -145,7 +139,7 @@ That builds the merged image and manifest in `firmware/`, which the installer se
 
 | Path | What it holds |
 |---|---|
-| `src/main.c` | Trigger modes, BOOT-button reset, status light |
+| `src/main.c` | Reading the contact, BOOT-button reset, status light |
 | `src/transport_classic.c` | The Bluetooth mouse and reconnecting to the iPhone |
 | `src/config.c` | Reads the settings written by the installer |
 | `docs/` | The installer website (GitHub Pages) |

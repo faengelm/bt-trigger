@@ -163,18 +163,6 @@
             <small class="hint"><span id="name-bytes">12</span>/29 bytes · <span id="name-hint">Give each board its own name, e.g. "BT Trigger 2" or "Desk".</span></small>
           </div>
 
-          <fieldset class="field" id="trigger-fieldset">
-            <legend>When should it trigger?</legend>
-            <div class="choices">
-              <label class="choice"><input type="radio" name="trigger" value="1" checked>
-                <span><b>🔌 While a contact is closed</b><small>Switch, relay, reed switch or pressure pad on D4 and GND. Connected while it's closed.</small></span></label>
-              <label class="choice"><input type="radio" name="trigger" value="2">
-                <span><b>🔘 When a button is pressed</b><small>Each press connects for a few seconds, then disconnects.</small></span></label>
-              <label class="choice"><input type="radio" name="trigger" value="0">
-                <span><b>⚡ When it gets power</b><small>No wiring: power the board from the thing you want to detect.</small></span></label>
-            </div>
-          </fieldset>
-
           <div id="trigger-pin-row" class="pin-box" hidden>
             <div class="field-row">
               <div class="field">
@@ -289,7 +277,7 @@
     <div id="done" class="alert ok" hidden>
       <b>Done! The board is ready.</b>
       <ol>
-        <li>Pair it: iPhone → <b>Settings → Accessibility → Touch → AssistiveTouch</b> → turn it on → <b>Devices → Bluetooth Devices</b> → tap <b id="done-name">BT Trigger 1</b>. (iPad: <b>Settings → Bluetooth</b>.)</li>
+        <li>Pair it: iPhone → <b>Settings → Accessibility → Touch → AssistiveTouch</b> → turn it on → <b>Devices → Bluetooth Devices</b> → tap <b id="done-name">BT Trigger 1</b>. On an iPad, skip AssistiveTouch: just use <b>Settings → Bluetooth</b>.</li>
         <li>Automate it: <b>Shortcuts → Automation → + → Bluetooth</b> → choose it → <b>Is Connected</b> → <b>Run Immediately</b>.</li>
       </ol>
       <p id="done-pin" hidden>Until a phone is paired, the board stays visible so you can pair it. After that it connects <b>only while the contact is closed</b>: close it to test.</p>
@@ -306,10 +294,11 @@
         <h3>1 · Pair it once</h3>
         <ol>
           <li>Power the board. Its light blinks fast while it waits to pair.</li>
-          <li>On the iPhone, open <b>Settings → Accessibility → Touch → AssistiveTouch</b> and turn it on.</li>
-          <li>Open <b>Devices → Bluetooth Devices</b> and tap your board's name. There's no code to enter.</li>
+          <li><i>iPhone only:</i> open <b>Settings → Accessibility → Touch → AssistiveTouch</b> and turn it on.</li>
+          <li><i>iPhone only:</i> open <b>Devices → Bluetooth Devices</b> and tap your board's name. There's no code to enter.</li>
         </ol>
-        <p class="note">iPhones only list Bluetooth mice under AssistiveTouch, not in Settings → Bluetooth. On an iPad, use Settings → Bluetooth.</p>
+        <p class="note"><b>On an iPad, skip AssistiveTouch:</b> open <b>Settings → Bluetooth</b> and tap your board's name there.
+          iPhones only list Bluetooth mice under AssistiveTouch, which is why the iPhone needs the extra steps.</p>
       </div>
       <div class="card">
         <h3>2 · Make the automation</h3>
@@ -353,7 +342,7 @@
   <!-- ================= DOWNLOADS ================= -->
   <section id="downloads" class="wrap downloads">
     <h2>Download the firmware</h2>
-    <p>Prefer the command line? Write the file at offset <code>0x0</code>. Flashed this way, the board starts with the name <code>ESP32-BT-Trigger</code> and connects whenever it has power. To use it with a contact, connect it to this page afterwards, choose your settings and click <b>Save settings only</b>.</p>
+    <p>Prefer the command line? Write the file at offset <code>0x0</code>. Flashed this way, the board starts with the name <code>ESP32-BT-Trigger</code> and isn't set up for a contact yet: connect it to this page afterwards and click <b>Save settings only</b>.</p>
     <div class="table-wrap">
       <table id="dl-table">
         <thead><tr><th>Chip</th><th>Bluetooth</th><th>File</th><th>Size</th></tr></thead>
