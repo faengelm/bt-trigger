@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>BT Trigger</title>
-  <meta name="description" content="A dry-contact sensor for iPhone Shortcuts. When a switch, relay or pressure pad closes, an ESP32 connects to your iPhone over Bluetooth and a Shortcut runs. Set it up from your browser.">
+  <meta name="description" content="BT Trigger user guide. Plug a switch, relay or pressure pad into the 3.5mm jack: when the contact closes, your iPhone runs a Shortcut. No hub, no Wi-Fi, no app.">
   <meta property="og:title" content="BT Trigger – a dry-contact sensor for iPhone Shortcuts">
   <meta property="og:description" content="When a two-wire contact closes, your iPhone runs a Shortcut. No hub, no Wi-Fi, no app.">
   <meta property="og:type" content="website">
@@ -20,19 +20,16 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="img/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
-  <script type="module" src="js/app.js"></script>
 </head>
 <body>
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a class="brand" href="#top"><img src="img/icon.svg" alt="" width="28" height="28"> BT Trigger</a>
     <nav>
-      <a href="#how">How it works</a>
-      <a href="#install">Install</a>
-      <a href="#iphone">iPhone setup</a>
-      <a href="#contact">Wiring</a>
+      <a href="#setup">Setting it up</a>
+      <a href="#contact">Connecting a contact</a>
+      <a href="#reset">Starting over</a>
       <a href="#faq">Questions</a>
-      <a class="gh" href="https://github.com/faengelm/bt-trigger">GitHub</a>
     </nav>
   </div>
 </header>
@@ -41,20 +38,19 @@
   <!-- ================= HERO ================= -->
   <section class="hero wrap">
     <div class="hero-text">
-      <p class="eyebrow">Dry-contact sensor · ESP32 · iPhone Shortcuts</p>
+      <p class="eyebrow">User guide · Dry-contact sensor for iPhone Shortcuts</p>
       <h1>When a contact closes,<br>your iPhone <span class="accent">runs a Shortcut.</span></h1>
-      <p class="lead">Connect a switch, relay, reed switch or pressure pad to a small ESP32 board.
-        When the contact closes, the board connects to your iPhone over Bluetooth and
+      <p class="lead">Plug a switch, relay, reed switch or pressure pad into your BT Trigger.
+        When the contact closes, BT Trigger connects to your iPhone over Bluetooth and
         the <b>Shortcuts</b> app runs your automation.</p>
       <div class="cta">
-        <a class="btn primary" href="#install">Set it up</a>
-        <a class="btn ghost" href="https://github.com/faengelm/bt-trigger">Source code</a>
+        <a class="btn primary" href="#setup">Set it up</a>
       </div>
       <ul class="pills">
-        <li>No home hub</li><li>No Wi-Fi</li><li>No app to install</li><li>Open source</li>
+        <li>No home hub</li><li>No Wi-Fi</li><li>No app to install</li><li>Ready to use</li>
       </ul>
     </div>
-    <figure class="hero-art" aria-label="A contact closes, the ESP32 connects over Bluetooth, the iPhone runs a Shortcut">
+    <figure class="hero-art" aria-label="A contact closes, BT Trigger connects over Bluetooth, the iPhone runs a Shortcut">
       <svg viewBox="0 0 420 300" role="img">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -71,8 +67,8 @@
         <path d="M110 150 H150" class="flow" marker-end="url(#arr)"/>
         <g class="art-esp">
           <rect x="156" y="118" width="96" height="64" rx="8"/>
-          <rect x="178" y="132" width="52" height="36" rx="4" class="chip"/>
-          <text x="204" y="155" text-anchor="middle" class="chip-t">ESP32</text>
+          <rect x="166" y="132" width="76" height="36" rx="4" class="chip"/>
+          <text x="204" y="155" text-anchor="middle" class="chip-t">BT Trigger</text>
           <text x="204" y="206" text-anchor="middle">connects</text>
         </g>
         <g class="waves">
@@ -99,218 +95,45 @@
     </div>
   </section>
 
-  <!-- ================= HOW ================= -->
-  <section id="how" class="wrap how">
-    <h2>How it works</h2>
-    <ol class="steps">
-      <li><b>The contact closes</b><span>A switch, relay, reed switch or pressure pad connects D4 to GND.</span></li>
-      <li><b>The board connects</b><span>It connects to your iPhone over Bluetooth, within a few seconds.</span></li>
-      <li><b>Your Shortcut runs</b><span>From an automation that says "When BT Trigger 1 connects".</span></li>
-    </ol>
-    <p class="note">When the contact opens, the board disconnects, and a second automation ("Is Disconnected") can react to that too.
-      To the iPhone the board is a Bluetooth mouse that never moves: connecting is the signal, and it never types or clicks anything.</p>
-  </section>
-
-  <!-- ================= INSTALLER ================= -->
-  <section id="install" class="wrap installer">
-    <h2>Install from your browser</h2>
-    <p class="sub">Open this page in <b>Chrome or Edge on a computer</b> and plug the board in. Nothing else to install.</p>
-    <div class="alert warn compat">
-      <b>Use an original ESP32 board</b>, such as an "ESP32 DevKit" or "ESP32-WROOM-32" (about $3–5).
-      <b>ESP32-S3, C3 and C6 won't work</b>: their Bluetooth can't be used as a Shortcuts trigger.
-    </div>
-
-    <div id="browser-warning" class="alert warn" hidden>
-      <b>This browser can't talk to USB devices.</b> Open this page in <b>Chrome</b> or <b>Edge</b> on a computer.
-      Safari, Firefox and iPhone/iPad can't install it.
-    </div>
-
-    <ol class="wizard">
-      <!-- STEP 1 -->
-      <li class="card" id="step-connect">
-        <header><span class="num">1</span><h3>Connect your board</h3></header>
-        <p>Plug the ESP32 in with a <b>data</b> USB cable (some cables only charge), then click Connect and pick its port.</p>
-        <div class="row">
-          <button id="btn-connect" class="btn primary">Connect</button>
-          <button id="btn-disconnect" class="btn ghost" hidden>Disconnect</button>
-          <span id="connect-status" class="status" aria-live="polite"></span>
-        </div>
-        <details class="help">
-          <summary>Port not listed / can't connect?</summary>
-          <ul>
-            <li>Try another cable or USB port. A charge-only cable is the #1 cause.</li>
-            <li>Install the USB driver for your board's chip: <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers">CP210x</a> or <a href="https://www.wch-ic.com/downloads/CH341SER_ZIP.html">CH340/CH343</a>.</li>
-            <li>Hold the <b>BOOT</b> button, tap <b>RESET/EN</b>, release BOOT, then click Connect again.</li>
-            <li>Close other programs using the port (Arduino IDE, serial monitors, Cura…).</li>
-          </ul>
-        </details>
-      </li>
-
-      <!-- STEP 2 -->
-      <li class="card" id="step-settings" aria-disabled="true">
-        <header><span class="num">2</span><h3>Choose your settings</h3></header>
-        <form id="settings" autocomplete="off">
-          <div class="field">
-            <label for="board">Board</label>
-            <select id="board"></select>
-            <small id="board-note" class="hint"></small>
-          </div>
-
-          <div class="field">
-            <label for="name">Bluetooth name <small>(what you'll see on the iPhone)</small></label>
-            <input id="name" maxlength="40" value="BT Trigger 1" required>
-            <small class="hint"><span id="name-bytes">12</span>/29 bytes · <span id="name-hint">Give each board its own name, e.g. "BT Trigger 2" or "Desk".</span></small>
-          </div>
-
-          <div id="trigger-pin-row" class="pin-box" hidden>
-            <div class="field-row">
-              <div class="field">
-                <label for="trigger-gpio">Input pin</label>
-                <select id="trigger-gpio" class="pin-in"></select>
-              </div>
-              <div class="field">
-                <label for="trigger-pol">Active when the pin reads</label>
-                <select id="trigger-pol">
-                  <option value="0">LOW (pulled to GND)</option>
-                  <option value="1">HIGH (pulled to 3.3 V)</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="trigger-pull">Internal resistor</label>
-                <select id="trigger-pull">
-                  <option value="1">Pull-up (to 3.3 V)</option>
-                  <option value="2">Pull-down (to GND)</option>
-                  <option value="3">None (external resistor / sensor output)</option>
-                </select>
-              </div>
-            </div>
-            <div class="field-row">
-              <div class="field">
-                <label for="debounce">Debounce <small>(ignore glitches shorter than)</small></label>
-                <div class="unit"><input id="debounce" type="number" min="10" max="5000" step="10" value="50"><span>ms</span></div>
-              </div>
-              <div class="field" id="pulse-row">
-                <label for="pulse">Stay connected for <small>(per press)</small></label>
-                <div class="unit"><input id="pulse" type="number" min="1" max="3600" value="10"><span>s</span></div>
-              </div>
-              <div class="field" id="hold-row">
-                <label for="hold">Keep connected after release</label>
-                <div class="unit"><input id="hold" type="number" min="0" max="3600" value="0"><span>s</span></div>
-              </div>
-            </div>
-            <p class="wiring" id="wiring"></p>
-          </div>
-          <small class="hint" id="trigger-hint"></small>
-
-          <details class="field advanced">
-            <summary>Status LED, reset button, pairing &amp; transmit power</summary>
-            <div class="field-row">
-              <div class="field">
-                <label for="led-type">Status LED</label>
-                <select id="led-type">
-                  <option value="0">None</option>
-                  <option value="1">Normal LED</option>
-                  <option value="2">RGB LED (WS2812 / SK6812)</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="led-gpio">LED pin</label>
-                <select id="led-gpio" class="pin-out"></select>
-              </div>
-              <div class="field">
-                <label for="led-pol">LED lights when pin is</label>
-                <select id="led-pol"><option value="0">HIGH</option><option value="1">LOW</option></select>
-              </div>
-            </div>
-            <small class="hint">Off = waiting · fast blink = ready to pair · short flash = looking for your iPhone · steady = connected.</small>
-
-            <div class="field-row">
-              <div class="field">
-                <label for="button-gpio">"Forget phones" button <small>(hold 5 s)</small></label>
-                <select id="button-gpio" class="pin-in"></select>
-              </div>
-              <div class="field">
-                <label for="pairwin">New phones can pair</label>
-                <select id="pairwin">
-                  <option value="0">at any time</option>
-                  <option value="60">only in the first 60 s after power-on</option>
-                  <option value="180">only in the first 3 min after power-on</option>
-                </select>
-              </div>
-              <div class="field" id="reconnect-row">
-                <label for="reconnect">Reconnect every <small>(Classic BT)</small></label>
-                <div class="unit"><input id="reconnect" type="number" min="3" max="600" value="8"><span>s</span></div>
-              </div>
-            </div>
-            <small class="hint">"Pairing window" hides the device from strangers: phones already paired always reconnect.</small>
-
-            <div class="field-row">
-              <div class="field">
-                <label for="tx-power">Transmit power</label>
-                <select id="tx-power"></select>
-              </div>
-            </div>
-            <small class="hint">Lower power = shorter range, less current and heat: the iPhone must be closer for the trigger to fire.
-              Raise it if the board sits in a box, a vehicle frame or behind metal.</small>
-          </details>
-        </form>
-      </li>
-
-      <!-- STEP 3 -->
-      <li class="card" id="step-flash" aria-disabled="true">
-        <header><span class="num">3</span><h3>Install</h3></header>
-        <div id="fw-info" class="fw-info"></div>
-        <label class="check"><input type="checkbox" id="forget"> Forget paired phones (clean install)</label>
-        <small class="hint" id="forget-hint">Leave it off to keep your iPhone paired across updates.</small>
-        <div class="row">
-          <button id="btn-install" class="btn primary" disabled>Install firmware + settings</button>
-          <button id="btn-settings-only" class="btn ghost" disabled title="Your board already runs this firmware: only rewrite the 4 KB settings block">Save settings only</button>
-        </div>
-        <div class="progress" id="progress" hidden><div class="bar" id="bar"></div><span id="progress-label"></span></div>
-        <details class="log" id="log-box">
-          <summary>Technical log</summary>
-          <pre id="log"></pre>
-        </details>
-      </li>
-    </ol>
-    <div id="done" class="alert ok" hidden>
-      <b>Done! The board is ready.</b>
-      <ol>
-        <li>Pair it: iPhone → <b>Settings → Accessibility → Touch → AssistiveTouch</b> → turn it on → <b>Devices → Bluetooth Devices</b> → tap <b id="done-name">BT Trigger 1</b>. On an iPad, skip AssistiveTouch: just use <b>Settings → Bluetooth</b>.</li>
-        <li>Automate it: <b>Shortcuts → Automation → + → Bluetooth</b> → choose it → <b>Is Connected</b> → <b>Run Immediately</b>.</li>
-      </ol>
-      <p id="done-pin" hidden>Until a phone is paired, the board stays visible so you can pair it. After that it connects <b>only while the contact is closed</b>: close it to test.</p>
-      <p id="done-rename" hidden></p>
-      <button id="btn-monitor" class="btn ghost small">Show live device log</button>
-    </div>
-  </section>
-
-  <!-- ================= IPHONE ================= -->
-  <section id="iphone" class="wrap iphone">
-    <h2>iPhone setup</h2>
+  <!-- ================= SETUP ================= -->
+  <section id="setup" class="wrap iphone">
+    <h2>Setting it up</h2>
     <div class="grid2">
       <div class="card">
-        <h3>1 · Pair it once</h3>
+        <h3>1 · Power it</h3>
         <ol>
-          <li>Power the board. Its light blinks fast while it waits to pair.</li>
-          <li><i>iPhone only:</i> open <b>Settings → Accessibility → Touch → AssistiveTouch</b> and turn it on.</li>
-          <li><i>iPhone only:</i> open <b>Devices → Bluetooth Devices</b> and tap your board's name. There's no code to enter.</li>
+          <li>Plug BT Trigger into a USB power adapter. A phone charger works. There's no battery and no power switch.</li>
+          <li>Find its Bluetooth name on the label, for example <b>BT Trigger 1</b>.</li>
         </ol>
-        <p class="note"><b>On an iPad, skip AssistiveTouch:</b> open <b>Settings → Bluetooth</b> and tap your board's name there.
-          iPhones only list Bluetooth mice under AssistiveTouch, which is why the iPhone needs the extra steps.</p>
       </div>
       <div class="card">
-        <h3>2 · Make the automation</h3>
+        <h3>2 · Pair it once</h3>
+        <ol>
+          <li><i>iPhone:</i> open <b>Settings → Accessibility → Touch → AssistiveTouch</b> and turn it on.</li>
+          <li><i>iPhone:</i> open <b>Devices → Bluetooth Devices</b> and tap your BT Trigger's name. There's no code to enter.</li>
+        </ol>
+        <p class="note"><b>On an iPad, skip AssistiveTouch:</b> open <b>Settings → Bluetooth</b> and tap the name there.
+          iPhones only list this kind of accessory under AssistiveTouch.</p>
+      </div>
+      <div class="card">
+        <h3>3 · Make the automation</h3>
         <ol>
           <li>Open <b>Shortcuts → Automation → +</b>.</li>
-          <li>Choose <b>Bluetooth</b>, pick your board, and choose <b>Is Connected</b>.</li>
+          <li>Choose <b>Bluetooth</b>, pick your BT Trigger, and choose <b>Is Connected</b>.</li>
           <li>Choose <b>Run Immediately</b>, then add the actions you want.</li>
         </ol>
         <p class="note">Want something to happen when the contact opens too? Make a second automation with <b>Is Disconnected</b>.</p>
       </div>
+      <div class="card">
+        <h3>4 · Plug in your contact</h3>
+        <ol>
+          <li>Plug your switch, relay or pressure pad into the <b>3.5mm socket</b>.</li>
+          <li>Close the contact. Within a few seconds your Shortcut runs.</li>
+        </ol>
+        <p class="note">While BT Trigger is connected, iOS may show an AssistiveTouch pointer on screen. You can hide it in
+          <i>Settings → Accessibility → Touch → AssistiveTouch → Pointer Devices</i>.</p>
+      </div>
     </div>
-    <p class="note">While the board is connected, iOS may show an AssistiveTouch pointer, because it thinks a mouse is attached.
-      You can hide it in <i>Settings → Accessibility → Touch → AssistiveTouch → Pointer Devices</i>.</p>
   </section>
 
   <!-- ================= CONTACT ================= -->
@@ -318,54 +141,72 @@
     <h2>Connecting a contact</h2>
     <div class="grid2">
       <div class="card">
-        <h3>Wiring</h3>
-        <ol>
-          <li>Connect the contact's two wires to <b>D4</b> and <b>GND</b>. Either wire can go to either pin.</li>
-          <li>That's all: the board's internal resistor holds D4 up until the contact closes.</li>
-        </ol>
-        <p class="note"><b>Passive contacts only:</b> a switch, relay, reed switch, button or pressure pad with nothing driving it.
-          Don't connect anything that supplies a voltage. The pins take 3.3 V at most.</p>
+        <h3>What you can plug in</h3>
+        <p>Any <b>passive contact</b> with a 3.5mm plug: a switch, a relay contact, a reed switch on a door,
+          a push button, or a chair or bed pressure pad with nothing driving it.
+          Either wire can go to either terminal: polarity doesn't matter.</p>
       </div>
       <div class="card">
-        <h3>What the light means</h3>
-        <ul>
-          <li><b>Off</b>: normal. The contact is open and the board is waiting.</li>
-          <li><b>Fast blinking</b>: no iPhone paired yet, ready to pair.</li>
-          <li><b>A short flash every 1.5 s</b>: the contact is closed and the board is looking for the iPhone.</li>
-          <li><b>Steady on</b>: connected. Your automation has run.</li>
-        </ul>
+        <h3>What not to plug in</h3>
+        <p><b>No headphones, audio cables, or anything that supplies a voltage.</b>
+          The socket is the same shape as an audio jack, but it isn't one.
+          Applying a voltage can damage BT Trigger.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- ================= SEVERAL ================= -->
+  <section id="several" class="wrap iphone">
+    <h2>Using several</h2>
+    <p class="note">Each BT Trigger has its own name (BT Trigger 1, BT Trigger 2, and so on). Pair each one, then make one automation per name,
+      so each contact can run a different Shortcut. Several iPhones can pair with the same BT Trigger, but only one is connected at a time.</p>
+  </section>
+
+  <!-- ================= RESET ================= -->
+  <section id="reset" class="wrap iphone">
+    <h2>Starting over</h2>
+    <div class="card">
+      <ol>
+        <li>Unplug BT Trigger and remove the case cover.</li>
+        <li>Plug it back into USB power and wait a few seconds. <i>Don't hold the button while plugging it in.</i></li>
+        <li>Hold the <b>BOOT</b> button on the board for <b>5 seconds</b>. The blue light flickers very fast while it forgets its phones, then BT Trigger restarts.</li>
+        <li>Put the cover back on.</li>
+        <li>On each iPhone or iPad that was paired: find BT Trigger in Bluetooth settings, tap <b>ⓘ → Forget This Device</b>, then pair again.</li>
+      </ol>
+      <p class="note">After a reset, BT Trigger also gets a new Bluetooth address, so phones and iPads that paired before can't reconnect on their own.</p>
     </div>
   </section>
 
   <!-- ================= FAQ ================= -->
   <section id="faq" class="wrap faq">
     <h2>Questions</h2>
-    <details><summary>What can I connect?</summary>
-      <p>Anything that closes two wires together without supplying power of its own: a switch, a relay contact, a reed switch on a door, a push button, or a chair or bed pressure pad. Connect it between <b>D4</b> and <b>GND</b>.</p></details>
-    <details><summary>Which boards work?</summary>
-      <p>An <b>original ESP32</b>: boards sold as "ESP32 DevKit", "DOIT DevKit V1", "NodeMCU-32S" or "ESP32-WROOM-32", with 2 MB of flash or more.</p>
-      <p><b>ESP32-S3, C3, C6, C5 and H2 don't work.</b> They only have Bluetooth LE, and Shortcuts doesn't offer those accessories as automation triggers. <b>ESP32-S2 and ESP8266</b> have no Bluetooth.</p></details>
-    <details><summary>Can I use several boards?</summary>
-      <p>Yes. Give each one its own name: this page suggests <b>BT Trigger 1</b>, <b>BT Trigger 2</b> and so on, counting in the browser you use. Each name gets its own automation, so each contact can run a different Shortcut.</p></details>
-    <details><summary>Can several iPhones use one board?</summary>
-      <p>Several iPhones can pair with it, but only one is connected at a time. The board calls the one it last connected to first.</p></details>
-    <details><summary>How do I change the settings?</summary>
-      <p>Plug the board in and connect it here again. Its current settings are read back. Change what you need and click <b>Save settings only</b>: the iPhone stays paired.</p></details>
-    <details><summary>How do I reset it?</summary>
-      <p>Hold the board's <b>BOOT</b> button for 5 seconds, or install again with "Forget paired phones" ticked. The board also gets a new Bluetooth address, so iPhones and iPads that paired before can't reconnect. Remove the old entry on the iPhone, then pair again.</p></details>
-    <details><summary>Does it need the internet?</summary>
-      <p>No. The board only talks to the iPhone over Bluetooth. There's no account, no app and no cloud. Whether your Shortcut uses the internet is up to you.</p></details>
-    <details><summary>How much power does it use?</summary>
-      <p>About 30–60 mA, so run it from a USB power supply rather than a battery.</p></details>
+    <details><summary>My iPhone doesn't show BT Trigger</summary>
+      <p>Look under <b>Settings → Accessibility → Touch → AssistiveTouch → Devices → Bluetooth Devices</b>, not in Settings → Bluetooth.
+        Make sure BT Trigger is plugged into power, and turn Bluetooth off on any iPad that might be grabbing it first.</p></details>
+    <details><summary>Closing the contact does nothing</summary>
+      <p>Check the plug is pushed fully into the 3.5mm socket, and that the automation in Shortcuts is set to <b>Run Immediately</b>.
+        Your iPhone needs Bluetooth on and has to be within range.</p></details>
+    <details><summary>How far away can the iPhone be?</summary>
+      <p>About 10 m (30 ft) in the open, less through walls and furniture.</p></details>
+    <details><summary>Does it need the internet or an account?</summary>
+      <p>No. BT Trigger only talks to your iPhone over Bluetooth. There's no account, no app and no cloud. Whether your Shortcut uses the internet is up to you.</p></details>
+    <details><summary>Can it run on a battery?</summary>
+      <p>It's meant to stay plugged into USB power. It uses about 30–60 mA, which would drain a small battery quickly.</p></details>
+  </section>
+
+  <!-- ================= DIY ================= -->
+  <section id="diy" class="wrap why">
+    <h2>Build your own</h2>
+    <p class="note">BT Trigger is open source. If you'd rather program and wire your own from an ESP32 board,
+      the <a href="diy.html">DIY page</a> has the parts, the wiring and a browser-based installer,
+      and the source is on <a href="https://github.com/faengelm/bt-trigger">GitHub</a>.</p>
   </section>
 </main>
 
 <footer class="foot">
   <div class="wrap">
     <p>BT Trigger · MIT License · <a href="https://github.com/faengelm/bt-trigger">GitHub</a> ·
-      based on <a href="https://github.com/Mattboxx/esp32-bt-trigger">esp32-bt-trigger</a> by Mattboxx ·
-      flashing by <a href="https://github.com/espressif/esptool-js">esptool-js</a> (Apache-2.0).
+      based on <a href="https://github.com/Mattboxx/esp32-bt-trigger">esp32-bt-trigger</a> by Mattboxx.
       Not affiliated with Apple or Espressif. iPhone and Shortcuts are trademarks of Apple Inc.</p>
   </div>
 </footer>
