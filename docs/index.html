@@ -122,8 +122,7 @@
 
     <div id="browser-warning" class="alert warn" hidden>
       <b>This browser can't talk to USB devices.</b> Open this page in <b>Chrome</b> or <b>Edge</b> on a computer.
-      Safari, Firefox and iPhone/iPad don't support Web Serial.
-      You can still <a href="#downloads">download the firmware</a> and flash it with esptool.
+      Safari, Firefox and iPhone/iPad can't install it.
     </div>
 
     <ol class="wizard">
@@ -200,8 +199,8 @@
               </div>
             </div>
             <p class="wiring" id="wiring"></p>
-            <small class="hint" id="trigger-hint"></small>
           </div>
+          <small class="hint" id="trigger-hint"></small>
 
           <details class="field advanced">
             <summary>Status LED, reset button, pairing &amp; transmit power</summary>
@@ -337,20 +336,6 @@
         </ul>
       </div>
     </div>
-  </section>
-
-  <!-- ================= DOWNLOADS ================= -->
-  <section id="downloads" class="wrap downloads">
-    <h2>Download the firmware</h2>
-    <p>Prefer the command line? Write the file at offset <code>0x0</code>. Flashed this way, the board starts with the name <code>ESP32-BT-Trigger</code> and isn't set up for a contact yet: connect it to this page afterwards and click <b>Save settings only</b>.</p>
-    <div class="table-wrap">
-      <table id="dl-table">
-        <thead><tr><th>Chip</th><th>Bluetooth</th><th>File</th><th>Size</th></tr></thead>
-        <tbody><tr><td colspan="4">Loading…</td></tr></tbody>
-      </table>
-    </div>
-    <pre class="cmd"><code>pip install esptool
-esptool.py --port &lt;PORT&gt; write_flash 0x0 bt-trigger-esp32.factory.bin</code></pre>
   </section>
 
   <!-- ================= FAQ ================= -->
