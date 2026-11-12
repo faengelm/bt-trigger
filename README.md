@@ -44,8 +44,7 @@ is the signal: it never types, clicks or moves anything.
 
 1. **Install.** Plug the board into your computer, open the
    [installer page](https://faengelm.github.io/bt-trigger/) and click **Connect**.
-   Leave the input pin on **4**, check the name (for example "BT Trigger 1"), then
-   click **Install**.
+   Check the name (for example "BT Trigger 1"), then click **Install**.
 2. **Pair.** Power the board.
    - **iPhone:** go to **Settings → Accessibility → Touch → AssistiveTouch**, turn it
      on, then open **Devices → Bluetooth Devices** and tap your board's name.
@@ -74,10 +73,6 @@ go to either pin.
   board's pins take 3.3 V at most, and more can damage it.
 - **No extra parts needed.** The board's internal resistor holds the pin up until
   the contact closes.
-- **Bouncy or noisy contacts:** raise **Debounce** in the installer so short
-  glitches are ignored.
-- **Quick open-close events** (like a door that swings shut): set **Keep connected
-  after release** to a few seconds, so the iPhone has time to connect.
 
 ## What the light means
 
@@ -113,9 +108,8 @@ again.
   Devices → Bluetooth Devices, not Settings → Bluetooth. (An iPad lists it in
   Settings → Bluetooth.) Turn Bluetooth off on other
   iPhones or iPads that were paired with it before.
-- **Closing the contact does nothing:** check the wires are on D4 and GND, and that
-  the installer shows input pin 4. Watch the light: it should start flashing when the
-  contact closes.
+- **Closing the contact does nothing:** check the wires are on D4 and GND. Watch the
+  light: it should start flashing when the contact closes.
 - **The Shortcut runs but asks first:** edit the automation and choose
   **Run Immediately**.
 - **See what the board is doing:** the installer's **Show live device log** button

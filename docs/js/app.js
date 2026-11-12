@@ -56,7 +56,9 @@ async function loadManifest() {
 }
 
 function renderDownloads() {
-  const tb = $("dl-table").querySelector("tbody");
+  const table = $("dl-table");
+  if (!table) return;             // the download list isn't on the page
+  const tb = table.querySelector("tbody");
   if (!state.manifest) {
     tb.innerHTML = `<tr><td colspan="4">Firmware files not found. Get them from the
       <a href="https://github.com/faengelm/bt-trigger/releases">Releases page</a>.</td></tr>`;
@@ -193,9 +195,10 @@ function readForm() {
     ledBrightness: DEFAULTS.ledBrightness,
     buttonGpio: Number($("button-gpio").value),
     triggerMode: TRIGGER.switch,
-    triggerGpio: Number($("trigger-gpio").value),
-    triggerActiveHigh: $("trigger-pol").value === "1",
-    triggerPull: Number($("trigger-pull").value),
+    // Contact wiring is fixed: D4 to GND, internal pull-up, active LOW.
+    triggerGpio: CONTACT_GPIO,
+    triggerActiveHigh: false,
+    triggerPull: PULL.up,
     debounceMs: Number($("debounce").value) || DEFAULTS.debounceMs,
     holdS: Math.max(0, Number($("hold").value) || 0),
     txPowerDbm: $("tx-power").value === "" ? null : Number($("tx-power").value),
@@ -245,7 +248,7 @@ function refreshForm() {
   }
 
   const needsPin = s.triggerMode !== TRIGGER.always;
-  $("trigger-pin-row").hidden = !needsPin;
+  $("trigger-pin-row").hidden = true;   // pin settings are fixed, not shown
   $("pulse-row").hidden = s.triggerMode !== TRIGGER.pulse;
   $("led-gpio").disabled = s.ledType === LED.none;
   $("led-pol").disabled = s.ledType !== LED.plain;
