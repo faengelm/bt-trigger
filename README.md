@@ -31,6 +31,10 @@ It arrives programmed and ready to use. The
    Trigger → Is Connected → Run Immediately → add your actions.
 4. **Plug your contact** into the 3.5mm socket and close it.
 
+**Pairing a second iPhone or iPad:** once a phone has paired, BT Trigger only shows
+up for pairing while the contact is closed. Turn off Bluetooth on the paired device,
+close the contact and keep it closed, then pair as above.
+
 Only plug in **passive contacts**: no headphones, audio cables, or anything that
 supplies a voltage.
 
